@@ -1,0 +1,139 @@
+/* reset básico */
+* { box-sizing: border-box; margin:0; padding:0; }
+
+body {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.main-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* card comum */
+.card {
+  background: #111;
+  border-radius: 12px;
+  padding: 20px;
+  flex: 1;
+  min-width: 420px;
+  max-width: 800px;
+  margin-top: 150px;
+}
+
+/* logo e título */
+.logo {
+  display: block;
+  margin: 0 auto 10px;
+  width: 80px;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+h3 {
+  margin: 20px 0 10px;
+}
+
+/* chat-list */
+.chat-list {
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 10px;
+}
+.chat-list li {
+  padding: 8px;
+  border-bottom: 1px solid #333;
+}
+
+/* formulários de chat */
+.chat-form {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+.chat-form input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+}
+.chat-form button {
+  padding: 10px 20px;
+  background: #5b29f0;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* placar simulador */
+.placar-box {
+  background: #1e1e1e;
+  border-radius: 8px;
+  text-align: center;
+  padding: 15px;
+}
+.placar-box button {
+  margin-top: 10px;
+  padding: 8px 20px;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* live-box */
+.live-box {
+  position: relative;
+  margin-bottom: 20px;
+}
+.live-label {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: #8000ff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #fff;
+  z-index: 1;
+}
+
+/* nickname */
+.nickname-box {
+  display: flex;
+  gap: 10px;
+}
+.nickname-box input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background: #222;
+  color: #ddd;
+}
+.nickname-box button {
+  padding: 8px 16px;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.nickname-box p {
+  color: #ddd;
+  text-align: center;
+  width: 100%;
+  margin: 10px 0;
+}
