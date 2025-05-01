@@ -140,10 +140,20 @@ def noticias_geral():
     Busca as últimas notícias que mencionem 'FURIA' via NewsAPI.org.
     Se não vier q= na query string, pesquisa por 'FURIA'.
     """
-    # 1) Pega q da query string ou usa 'FURIA'
-    q_raw = request.args.get("q", "").strip()
-    query = q_raw or "FURIA"
+    
+    # Títulos padrão para busca
+    titulos_padrao = ["FURIA", "CS", "Valorant", "LoL"]
 
+    # Pega o parâmetro q da query string ou usa os títulos padrão
+    q_raw = request.args.get("q", "").strip()
+
+    # Se q for fornecido, use-o; caso contrário, use todos os títulos padrão concatenados
+    if q_raw:
+        query = q_raw
+    else:
+        query = " OR ".join(titulos_padrao)  # exemplo de como juntar os termos numa única busca
+        
+        
     # 2) Faz a requisição à NewsAPI
     NEWSAPI_KEY = os.getenv("NEWSAPI_KEY", "SUA_CHAVE_AQUI")
     url = "https://newsapi.org/v2/everything"
@@ -167,7 +177,8 @@ def noticias_geral():
     # 4) Extrai os artigos
     articles = data.get("articles", [])
     resultados = [{
-        "titulo": art.get("title"),
+        
+        "titulo": art.get("title") if art.get("title") else "Artigo sem titulo",
         "link":   art.get("url")
     } for art in articles]
 
