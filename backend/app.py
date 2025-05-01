@@ -22,8 +22,13 @@ def fetch_furia_info():
         time = m.select_one(".matchTime").text.strip()
         teams = m.select(".matchTeam")
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         opponent = teams[1].text.strip() if len(teams) > 1 else "Indefinido"
         upcoming.append(f"{time} vs {opponent}")
+=======
+        opp = teams[1].text.strip() if len(teams)>1 else "Indefinido"
+        upcoming.append(f"{time} vs {opp}")
+>>>>>>> Stashed changes
 =======
         opp = teams[1].text.strip() if len(teams)>1 else "Indefinido"
         upcoming.append(f"{time} vs {opp}")
@@ -38,6 +43,7 @@ def fetch_furia_info():
 
 @app.route("/mensagem-bot", methods=["POST"])
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 def responder():
     user_message = request.json.get("mensagem", "").strip()
 
@@ -48,6 +54,14 @@ def responder():
         context = "Sem dados HLTV disponíveis no momento."
 
     # 2) Monta prompt para o Ollama
+=======
+def mensagem_bot():
+    user_message = request.json.get("mensagem","").strip()
+    try:
+        context = fetch_furia_info()
+    except:
+        context = "Sem dados HLTV disponíveis."
+>>>>>>> Stashed changes
 =======
 def mensagem_bot():
     user_message = request.json.get("mensagem","").strip()
@@ -149,6 +163,9 @@ Pergunta: "{user_message}"
     except:
         resp = "Erro ao conectar com IA."
     return jsonify({"resposta":resp})
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 @app.route("/verificar-jogo", methods=["GET"])
@@ -182,11 +199,15 @@ def noticias():
     return jsonify({"noticias":articles})
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         return jsonify({"status": "A FURIA não tem jogo hoje 😢"})
     except Exception:
         return jsonify({"status": "Erro ao buscar informações do jogo."})
 
 if __name__ == "__main__":
+=======
+if __name__=="__main__":
+>>>>>>> Stashed changes
 =======
 if __name__=="__main__":
 >>>>>>> Stashed changes
