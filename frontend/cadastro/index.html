@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login / Cadastro – FURIA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <img src="https://upload.wikimedia.org/wikipedia/pt/f/f9/Furia_Esports_logo.png" alt="FURIA" class="header-logo">
+    <nav>
+      <a href="/frontend/Home/index.html">CHAT</a>
+      <a href="/frontend/cadastro/index.html">CADASTRAR</a>
+      <a href="/frontend/Login/index.html">LOGIN</a>
+    </nav>
+  </header>
+
+  <!-- SECTION SPLIT -->
+  <section class="split-container">
+    <!-- Left: Login -->
+    <div class="panel panel-left">
+      <div class="panel-content">
+        <h2>Bem-vindo de volta!</h2>
+        <p>Para manter-se conectado com a gente, faça login com suas credenciais</p>
+        <a class="btn-outline" href="/frontend/Login/index.html" style="text-decoration: none;">Login</a>
+      </div>
+    </div>
+
+    <!-- Right: Sign Up -->
+    <div class="panel panel-right">
+      <div class="panel-content">
+        <h2>Criar Conta</h2>
+        <form id="signup-form">
+          <input type="text" placeholder="Nome de usuário" required>
+          <input type="text" placeholder="Nome completo" required>
+          <input type="text" placeholder="CPF com pontuação" required pattern="\d{3}\.\d{3}\.\d{3}-\d{2}">
+          <input type="text" placeholder="Endereço" required>
+          <textarea placeholder="Interesses" rows="2"></textarea>
+          <textarea placeholder="Atividades no último ano" rows="2"></textarea>
+          <textarea placeholder="Eventos relacionados" rows="2"></textarea>
+          <textarea placeholder="Compras no último ano" rows="2"></textarea>
+          <button type="submit" class="btn-primary">CADASTRAR</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>© 2024 FURIA Esports • Desenvolvido por Alaor</p>
+  </footer>
+
+</body>
+</html>

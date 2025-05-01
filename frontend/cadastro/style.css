@@ -1,0 +1,120 @@
+/* reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header/Footer */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  padding: 12px 24px;
+  border-bottom: 1px solid #222;
+}
+.header-logo { height: 40px; }
+.site-header nav a {
+  color: #fff;
+  margin-left: 20px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.site-header nav a.active { color: #5b29f0; }
+.site-footer {
+  background: #111;
+  text-align: center;
+  padding: 12px 0;
+  border-top: 1px solid #222;
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: auto;
+}
+
+/* Split panels */
+.split-container {
+  flex: 1;
+  display: flex;
+}
+.panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.panel-left {
+  background: #111;
+}
+.panel-right {
+  background: #0d0d0d;
+}
+.panel-content {
+  max-width: 320px;
+  width: 100%;
+  text-align: center;
+}
+.panel-content h2 {
+  margin-bottom: 12px;
+  font-size: 1.8rem;
+}
+.panel-content p {
+  margin-bottom: 24px;
+  color: #ccc;
+  font-size: 0.95rem;
+}
+
+/* Forms and buttons */
+.panel-content form input,
+.panel-content form textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.95rem;
+}
+.panel-content form textarea {
+  resize: vertical;
+  min-height: 50px;
+}
+.btn-primary,
+.btn-outline {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.btn-primary {
+  background: #5b29f0;
+  border: none;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #4a1fcf;
+}
+.btn-outline {
+  background: transparent;
+  border: 2px solid #5b29f0;
+  color: #5b29f0;
+}
+.btn-outline:hover {
+  background: #5b29f0;
+  color: #0d0d0d;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .split-container { flex-direction: column; }
+  .panel { padding: 20px; }
+}

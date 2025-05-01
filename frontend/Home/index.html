@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>FURIA Fan Platform</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <img src="https://upload.wikimedia.org/wikipedia/pt/f/f9/Furia_Esports_logo.png" alt="FURIA" class="header-logo">
+    <nav>
+      <a href="/frontend/Home/index.html">CHAT</a>
+      <a href="/frontend/cadastro/index.html">CADASTRAR</a>
+      <a href="/frontend/Login/index.html">LOGIN</a>
+    </nav>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-container" id="chat">
+
+    <!-- Simulador -->
+    <section class="card simulador">
+      <h2>🔥Simulador de Torcida da FURIA🔥</h2>
+      <ul id="mensagens" class="chat-list"></ul>
+      <form id="formulario" class="chat-form">
+        <input type="text" id="entrada" placeholder="Digite sua mensagem">
+        <button type="submit">Enviar</button>
+      </form>
+      <div class="placar-box">
+        <p><strong>FURIA está jogando?</strong></p>
+        <button id="btn-verificar">OK</button>
+        <p id="placar">Aguardando...</p>
+      </div>
+    </section>
+
+    <!-- Transmissão + Chat Ao Vivo -->
+    <section class="card transmissao-chat">
+      <div class="live-box">
+        <span class="live-label">LIVE</span>
+        <iframe src="https://player.twitch.tv/?channel=furia&parent=127.0.0.1"
+                frameborder="0" allowfullscreen height="180" width="100%"></iframe>
+      </div>
+      <div class="nickname-box">
+        <input type="text" id="nickname-input" placeholder="Escolha seu apelido">
+        <button id="nickname-submit">OK</button>
+      </div>
+      <h3>💬 Chat da Torcida (ao vivo)</h3>
+      <ul id="chat-publico" class="chat-list"></ul>
+      <form id="chat-form" class="chat-form">
+        <input type="text" id="mensagem" placeholder="Fale com outros torcedores">
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- NOTÍCIAS PARA VOCÊ -->
+  <section class="news-box" id="noticias">
+    <h2>📰 Notícias para você</h2>
+    <div id="news-container"><p>Faça Login para aparecer</p></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>© 2024 FURIA Esports • Desenvolvido por Alaor</p>
+  </footer>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

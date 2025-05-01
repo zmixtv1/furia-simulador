@@ -1,0 +1,74 @@
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background:#0d0d0d; color:#fff;
+  font-family:Arial, sans-serif;
+}
+
+/* HEADER */
+.site-header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 24px; background:#111; border-bottom:1px solid #222;
+}
+.header-logo { height:40px; }
+.site-header nav a {
+  color:#fff; margin-left:20px; text-decoration:none; font-weight:bold;
+}
+
+/* MAIN */
+.main-container {
+  display:flex; gap:20px; flex-wrap:wrap; padding:20px; align-items: center;
+  justify-content: center;
+}
+.card {
+  background:#111; border-radius:12px; padding:20px;
+  flex:1; min-width:300px; max-width:800px; min-height: 450px;
+}
+.card h2, .card h3 { text-align:center; margin-bottom:15px; }
+
+/* CHAT LIST */
+.chat-list {
+  list-style:none; max-height:200px; overflow-y:auto;
+  background:#1e1e1e; border-radius:8px; padding:10px; margin-bottom:10px;
+}
+.chat-list li { padding:8px; border-bottom:1px solid #333; }
+
+/* FORMULÁRIOS */
+.chat-form, .nickname-box {
+  display:flex; gap:10px; margin-bottom:15px;
+}
+.chat-form input, .nickname-box input {
+  flex:1; padding:10px; border:none; border-radius:6px; background:#222; color:#ddd;
+}
+.chat-form button, .nickname-box button, .placar-box button {
+  padding:10px 20px; border:none; border-radius:6px; cursor:pointer; background:#5b29f0; color:#fff;
+}
+
+/* PLACAR */
+.placar-box {
+  background:#1e1e1e; border-radius:8px; text-align:center; padding:15px; margin-top:10px;
+}
+
+/* LIVE */
+.live-box { position:relative; margin-bottom:15px; }
+.live-label {
+  position:absolute; top:8px; left:8px; background:#8000ff; padding:4px 8px;
+  border-radius:4px; font-size:0.85rem;
+}
+
+/* NOTÍCIAS */
+.news-box {
+  background:#111; border-radius:12px; padding:20px;
+  margin:20px auto; max-width:1040px; text-align:center;
+}
+.news-box h2 { margin-bottom:15px; }
+#news-container article {
+  text-align:left; background:#1e1e1e; padding:12px; border-radius:8px; margin-bottom:12px;
+}
+#news-container a { color:#5b29f0; text-decoration:none; font-weight:bold; }
+#news-container p { color:#ccc; font-size:0.9rem; }
+
+/* FOOTER */
+.site-footer {
+  background:#111; text-align:center; padding:12px 0;
+  border-top:1px solid #222; color:#888; font-size:0.9rem;
+}
