@@ -1,0 +1,9 @@
+# Dockerfile.ollama
+FROM ollama/ollama:latest
+
+# Copia o script de entrypoint e dá permissão
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Usa o entrypoint para iniciar Ollama e puxar o modelo
+ENTRYPOINT ["/entrypoint.sh"]

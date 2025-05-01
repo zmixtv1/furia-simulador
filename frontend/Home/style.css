@@ -57,15 +57,40 @@ body {
 
 /* NOTÍCIAS */
 .news-box {
-  background:#111; border-radius:12px; padding:20px;
-  margin:20px auto; max-width:1040px; text-align:center;
+  background:#111;
+  border-radius:12px;
+  padding:20px;
+  margin:30px auto;
+  max-width:1040px;
+  text-align:center;
 }
-.news-box h2 { margin-bottom:15px; }
-#news-container article {
-  text-align:left; background:#1e1e1e; padding:12px; border-radius:8px; margin-bottom:12px;
+/* Remove bullets e padding da lista */
+.news-titles {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
-#news-container a { color:#5b29f0; text-decoration:none; font-weight:bold; }
-#news-container p { color:#ccc; font-size:0.9rem; }
+
+/* Espaçamento entre cada item */
+.news-titles li {
+  margin-bottom: 12px; /* ajuste para mais/menos espaço */
+}
+
+/* Link continua com sua cor e peso, mas agora ocupa linha inteira */
+.news-titles .siteNoticia {
+  display: block;
+  color: #917bd3;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Se quiser um hover suave */
+.news-titles .siteNoticia:hover {
+  text-decoration: underline;
+}
+
+
+
 
 /* FOOTER */
 .site-footer {

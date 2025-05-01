@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login / Cadastro – FURIA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <img src="https://upload.wikimedia.org/wikipedia/pt/f/f9/Furia_Esports_logo.png"
+         alt="FURIA" class="header-logo">
+    <nav>
+      <a href="/frontend/Home/index.html">CHAT</a>
+      <a href="/frontend/cadastro/auth.html">CADASTRAR</a>
+      <a href="/frontend/Login/login.html">LOGIN</a>
+    </nav>
+  </header>
+
+  <!-- SECTION SPLIT -->
+  <section class="split-container">
+    <!-- Left: Login -->
+    <div class="panel panel-left">
+      <div class="panel-content">
+        <h2>Bem-vindo de volta!</h2>
+        <p>Para manter-se conectado com a gente, faça login com suas credenciais</p>
+        <a class="btn-outline" href="/frontend/Login/login.html"
+           style="text-decoration: none;">Login</a>
+      </div>
+    </div>
+
+    <!-- Right: Sign Up -->
+    <div class="panel panel-right">
+      <div class="panel-content">
+        <h2>Criar Conta</h2>
+        <form id="register-form">
+          <input type="text" id="username" name="username"
+                 placeholder="Nome de usuário" required>
+
+          <input type="text" id="fullname" name="fullname"
+                 placeholder="Nome completo" required>
+
+          <input type="text" id="cpf" name="cpf"
+                 placeholder="CPF com pontuação (000.000.000-00)"
+                 required pattern="\d{3}\.\d{3}\.\d{3}-\d{2}">
+
+          <input type="text" id="address" name="address"
+                 placeholder="Endereço" required>
+
+          <textarea id="interests"  name="interests"
+                    placeholder="Jogos Favoritos:" rows="2"></textarea>
+
+          <textarea id="activities" name="activities"
+                    placeholder="Atividades no último ano" rows="2"></textarea>
+
+          <textarea id="events"     name="events"
+                    placeholder="Eventos que participou" rows="2"></textarea>
+
+          <textarea id="purchases"  name="purchases"
+                    placeholder="Comprou algum item da Furia? qual?" rows="2"></textarea>
+
+          <button type="submit" class="btn-primary">CADASTRAR</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>© 2024 FURIA Esports • Desenvolvido por Alaor</p>
+  </footer>
+
+  <!-- SCRIPT de cadastro Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+    import { firebaseConfig } from "../firebase-config.js";
+
+    console.log("✨ Script de cadastro iniciado");
+
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+
+    const form = document.getElementById("register-form");
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      console.log("📝 Enviando cadastro...");
+
+      // Lê valores
+      const username   = form.username.value.trim();
+      const fullname   = form.fullname.value.trim();
+      const cpf        = form.cpf.value.trim();
+      const address    = form.address.value.trim();
+      const interests  = form.interests.value.trim();
+      const activities = form.activities.value.trim();
+      const events     = form.events.value.trim();
+      const purchases  = form.purchases.value.trim();
+      const payload    = { username, fullname, cpf, address, interests,
+                            activities, events, purchases,
+                            createdAt: new Date().toISOString() };
+
+      console.log("📦 Dados:", payload);
+
+      if (!username) {
+        alert("Escolha um nome de usuário.");
+        return;
+      }
+
+      try {
+        await set(ref(db, `users/${username}`), payload);
+        console.log("✅ Perfil salvo com sucesso!");
+        alert("Cadastro realizado com sucesso! Agora faça login.");
+        window.location.href = "/frontend/Login/login.html";
+      } catch (err) {
+        console.error("❌ Erro ao salvar perfil:", err);
+        alert("Erro ao salvar perfil: " + err.message);
+      }
+    });
+  </script>
+
+</body>
+</html>

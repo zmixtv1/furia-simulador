@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Entrar – FURIA Fan Platform</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <img src="https://upload.wikimedia.org/wikipedia/pt/f/f9/Furia_Esports_logo.png" alt="FURIA" class="header-logo">
+    <nav>
+      <a href="/frontend/Home/index.html">CHAT</a>
+      <a href="/frontend/cadastro/auth.html">CADASTRAR</a>
+      <a href="/frontend/Login/login.html" class="active">LOGIN</a>
+    </nav>
+  </header>
+
+  <!-- SPLIT: painel esquerdo com login -->
+  <section class="split-container">
+    <div class="panel panel-left">
+      <div class="panel-content" id="signin-form">
+        <h2>Bem-vindo de volta!</h2>
+        <p>Use suas credenciais para acessar sua conta de fã.</p>
+        <form id="login-form">
+          <input type="text" id="username" name="username"
+                 placeholder="Nome de usuário" required>
+          <input type="text" id="cpf" name="cpf"
+                 placeholder="CPF (000.000.000-00)" required
+                 pattern="\d{3}\.\d{3}\.\d{3}-\d{2}">
+          <button type="submit" class="btn-primary">ENTRAR</button>
+        </form>
+        <p class="small">
+          Ainda não tem conta? <a href="/frontend/cadastro/auth.html">Cadastre-se</a>
+        </p>
+      </div>
+    </div>
+    <!-- painel direito com arte ou mensagem -->
+    <div class="panel panel-right">
+      <div class="panel-content">
+        <h2>FURIA Fan Platform</h2>
+        <p>Conecte-se com a nossa comunidade e fique por dentro de tudo!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>© 2024 FURIA Esports • Desenvolvido por Alaor</p>
+  </footer>
+
+  <!-- SCRIPT de Login Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getDatabase, ref, get }  from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+    import { firebaseConfig }           from "../firebase-config.js";
+
+    // 1️⃣ Inicializa o Firebase
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+
+    console.log("✨ Script de login carregado");
+
+    // 2️⃣ Captura o form e trata o submit
+    const form = document.getElementById("login-form");
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      console.log("📝 Tentando login...");
+
+      const username = form.username.value.trim();
+      const cpf      = form.cpf.value.trim();
+
+      if (!username || !cpf) {
+        return alert("Preencha todos os campos.");
+      }
+
+      try {
+        // 3️⃣ Busca dados do usuário em /users/{username}
+        const snap = await get(ref(db, `users/${username}`));
+        if (!snap.exists()) {
+          return alert("Usuário não encontrado.");
+        }
+
+        const data = snap.val();
+        console.log("📦 Dados retornados:", data);
+
+        // 4️⃣ Valida o CPF
+        if (data.cpf !== cpf) {
+          return alert("CPF incorreto.");
+        }
+
+        // SALVA perfil inteiro no localStorage
+        localStorage.setItem("fanProfile", JSON.stringify(data));
+
+        // 5️⃣ Login bem-sucedido: redireciona para a home/chat
+        alert(`Bem-vindo, ${data.fullname}!`);
+        window.location.href = "/frontend/Home/index.html";
+      } catch (err) {
+        console.error("❌ Erro no login:", err);
+        alert("Erro ao realizar login: " + err.message);
+      }
+    });
+  </script>
+
+</body>
+</html>

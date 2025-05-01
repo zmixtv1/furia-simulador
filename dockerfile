@@ -10,5 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./
 COPY frontend/ ./static/
 
+
 EXPOSE 5000
 CMD ["flask", "run"]
+
