@@ -155,6 +155,7 @@ def noticias_geral():
         
         
     # 2) Faz a requisição à NewsAPI
+    
     NEWSAPI_KEY = os.getenv("NEWSAPI_KEY", "SUA_CHAVE_AQUI")
     url = "https://newsapi.org/v2/everything"
     params = {
@@ -162,7 +163,7 @@ def noticias_geral():
         "language": "pt",
         "pageSize": 10,
         "sortBy": "publishedAt",
-        "apiKey": "952e1d13c7204913a12e63808f364cd3"
+        "apiKey": NEWSAPI_KEY
     }
     resp = requests.get(url, params=params)
     # 3) Se não for 200, devolve o erro
