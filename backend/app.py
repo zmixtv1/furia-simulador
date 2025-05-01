@@ -2,9 +2,13 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
+import os
 
 app = Flask(__name__)
 CORS(app)
+
+# URL do servidor Ollama (pode ser sobrescrito por Docker Compose)
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
 def fetch_furia_info():
     """
@@ -22,12 +26,11 @@ def fetch_furia_info():
 
     # Extrai próximos jogos
     upcoming = []
-    for m in soup.select(".matches .upcomingMatch"):
+    for m in soup.select(".matches .upcomingMatch")[:3]:
         time = m.select_one(".matchTime").text.strip()
         teams = m.select(".matchTeam")
-        adversario = teams[1].text.strip() if len(teams) > 1 else "Indefinido"
-        upcoming.append(f"{time} vs {adversario}")
-    upcoming = upcoming[:3]
+        opponent = teams[1].text.strip() if len(teams) > 1 else "Indefinido"
+        upcoming.append(f"{time} vs {opponent}")
 
     parts = []
     if roster:
@@ -36,18 +39,17 @@ def fetch_furia_info():
         parts.append("Próximos jogos: " + "; ".join(upcoming))
     return " | ".join(parts) if parts else "Sem dados disponíveis."
 
-
 @app.route("/mensagem-bot", methods=["POST"])
 def responder():
     user_message = request.json.get("mensagem", "").strip()
 
-    # Busca contexto atualizado da FURIA
+    # 1) Busca contexto atualizado da FURIA
     try:
         context = fetch_furia_info()
     except Exception:
         context = "Sem dados HLTV disponíveis no momento."
 
-    # Monta prompt para o Ollama
+    # 2) Monta prompt para o Ollama
     prompt = f"""
 Contexto HLTV sobre a FURIA: {context}
 
@@ -57,76 +59,24 @@ Se perguntarem sobre datas de jogos, responda que não tem informação precisa.
 Sempre fale no idioma que está sendo perguntado!
 Fale somente o que foi perguntado!
 
-Contexto adicional sobre a FURIA:
-- Organização profissional brasileira fundada em 8 de agosto de 2017 por Jaime Pádua, André Akkari e Cris Guedes, com sede em São Paulo (e atuação nos EUA para CS:GO e Apex).
-- Compete em CS:GO, Rocket League, League of Legends, Valorant, Rainbow Six Siege, Apex Legends, Super Smash Bros. e Kings League.
-- Conquistas de destaque: semifinalista no IEM Rio Major 2022 (CS:GO), campeã da ESL Pro League Season 12 NA e 3º lugar no Six Invitational 2025 (R6).
-- Proprietários: Jaime Pádua, André Akkari, Cris Guedes; parceiros incluem Red Bull, PokerStars, Lenovo, Hellmann’s, Betnacional e Cruzeiro do Sul.
-- Elenco atual de CS:GO: FalleN, chelo, yuurih, skullz, KSCERATO.
-- Elenco atual de Valorant: khalil, mwzera, havoc, heat, raafa.
-- Nomeada 5ª organização de esports mais bem sucedida em 2022 pelo Nerd Street e integrante do Club Support Program da Esports World Cup 2024.
-
-Além do CS:GO, a FURIA marca presença em várias outras modalidades de esports de alto nível (com todo o sangue nos olhos de um verdadeiro fã! 😎🔥):
-- Rocket League 🚀
-- League of Legends 🐲
-- Valorant 🎯
-- Rainbow Six Siege 🏰
-- Apex Legends 🔫
-- Super Smash Bros. 🥊
-- Kings League ⚽️
-
-- Elenco por modalidade:
-  - **Counter-Strike 2 / CS:GO**  
-    - yuurih (sniper)  
-    - KSCERATO (sniper)  
-    - FalleN (capitão e IGL)  
-    - molodoy (sniper)  
-    - YEKINDAR (stand-in)  
-  - **Valorant**  
-    - Khalil (duelista)  
-    - havoc (iniciador)  
-    - heat (sentinela)  
-    - raafa (IGL)  
-    - pryze (sentinela)  
-  - **Rocket League**  
-    - yANXNZ (atacante)  
-    - Lostt (mid)  
-    - DRUFINHO (atacante)  
-  - **League of Legends**  
-    - Guigo (top)  
-    - Tatu (jungle)  
-    - Tutsz (mid)  
-    - Ayu (bot)  
-    - Jojo (support)  
-  - **Rainbow Six Siege**  
-    - FelipoX (líder de equipe)  
-    - HerdsZ (IGL)  
-    - Jv92 (suporte)  
-    - Kheyze (entry fragger)  
-    - nade (suporte)  
-  - **Apex Legends**  
-    - Xeratricky (capitão)  
-    - Pandxrz (atacante)  
-    - HisWattson (capitão lendário)  
-  - **Super Smash Bros. Ultimate**  
-    - Fatality (jogador profissional)  
-
 Pergunta do fã: "{user_message}"
 """
 
-    # Chama o Ollama local
+    # 3) Chama o Ollama local via variável de ambiente
     try:
-        resp = requests.post("http://localhost:11434/api/generate", json={
-            "model": "llama3",
-            "prompt": prompt,
-            "stream": False
-        })
+        resp = requests.post(
+            f"{OLLAMA_URL}/api/generate",
+            json={
+                "model": "llama3",
+                "prompt": prompt,
+                "stream": False
+            }
+        )
         texto = resp.json().get("response", "Desculpa, não consegui gerar uma resposta.")
     except Exception:
         texto = "Erro ao conectar com o Ollama."
 
     return jsonify({"resposta": texto})
-
 
 @app.route("/verificar-jogo", methods=["GET"])
 def verificar_jogo():
@@ -151,10 +101,8 @@ def verificar_jogo():
                 })
 
         return jsonify({"status": "A FURIA não tem jogo hoje 😢"})
-
     except Exception:
         return jsonify({"status": "Erro ao buscar informações do jogo."})
-
 
 if __name__ == "__main__":
     app.run(debug=True)

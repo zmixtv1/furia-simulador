@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  ollama:
+    image: ghcr.io/ollama/ollama:latest
+    container_name: ollama
+    # monta um volume para armazenar os modelos baixados
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "11434:11434"
+    command: ["ollama", "run", "llama3", "--port", "11434", "--api"]
+    # ou, se sua versão usar "serve":
+    # command: ["ollama", "serve", "llama3", "--port", "11434"]
+
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: furia-backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - ollama
+    environment:
+      # aponta para o host do Ollama dentro da rede docker
+      OLLAMA_URL: "http://ollama:11434"
+
+volumes:
+  ollama-data:
