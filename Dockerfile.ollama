@@ -1,9 +1,15 @@
 # Dockerfile.ollama
 FROM ollama/ollama:latest
 
-# Copia o script de entrypoint e dá permissão
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Expõe a porta usada internamente (11434)
+EXPOSE 11434
 
-# Usa o entrypoint para iniciar Ollama e puxar o modelo
+# Copia o entrypoint e já corrige CRLF → LF, instala curl e torna executável
+COPY entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh \
+ && chmod +x /entrypoint.sh \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends curl \
+ && rm -rf /var/lib/apt/lists/*
+
 ENTRYPOINT ["/entrypoint.sh"]

@@ -1,17 +1,17 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 set -e
 
-# Inicia o servidor Ollama em background
+echo "🚀 Iniciando servidor Ollama..."
+# usando OLLAMA_HOST para host:porta
 ollama serve &
-pid=$!
 
-# Dá um tempo pra ele subir
-sleep 5
+echo "⏳ Aguardando API do Ollama ficar disponível..."
+while ! curl -s http://localhost:11434/v1/models > /dev/null; do
+  sleep 2
+done
 
-# Puxa o modelo
-echo "📥 Pulling llama3 model..."
+echo "📥 Iniciando pull do modelo llama3..."
 ollama pull llama3
-echo "✅ llama3 ready!"
 
-# Espera o servidor continuar rodando
-wait $pid
+echo "✅ Modelo llama3 pronto!"
+wait

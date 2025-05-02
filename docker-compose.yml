@@ -4,11 +4,19 @@ services:
       context: .
       dockerfile: Dockerfile.ollama
     container_name: ollama
+    environment:
+      # bind em todas as interfaces na porta 11434
+      - OLLAMA_HOST=0.0.0.0:11434
     volumes:
       - ollama-data:/root/.ollama
     ports:
       - "11434:11434"
-
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/v1/models"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
   backend:
     build:
@@ -17,9 +25,13 @@ services:
     container_name: furia-backend
     ports:
       - "5000:5000"
-
     environment:
-      OLLAMA_URL: "http://ollama:11434"
+      - OLLAMA_URL=http://ollama:11434
+      - NEWSAPI_KEY=${NEWSAPI_KEY}
+      - FLASK_ENV=production
+    depends_on:
+      ollama:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
