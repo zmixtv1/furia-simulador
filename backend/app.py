@@ -4,21 +4,9 @@ import requests
 from bs4 import BeautifulSoup
 import os
 from dotenv import load_dotenv
-from flask import send_from_directory
 load_dotenv()
 
 app = Flask(__name__)
-
-# 1) defina onde estão seus estáticos:
-BASE_DIR   = os.path.dirname(__file__)
-STATIC_DIR = os.path.join(BASE_DIR, "frontend")
-# agora informamos ao Flask onde estão os estáticos:
-STATIC_DIR = os.path.join(os.path.dirname(__file__), "frontend")
-app = Flask(
-    __name__,
-    static_folder=STATIC_DIR,
-    static_url_path=""   # serve tudo em STATIC_DIR diretamente na raiz
-)
 CORS(app)
 
 # URL do servidor Ollama (pode ser sobrescrito por Docker Compose)
@@ -54,15 +42,6 @@ def fetch_furia_info():
     if upcoming:
         parts.append("Próximos jogos: " + "; ".join(upcoming))
     return " | ".join(parts) if parts else "Sem dados disponíveis."
-
-@app.route("/")
-def serve_index():
-    return send_from_directory(STATIC_DIR, "Home/index.html")
-
-# rota genérica para qualquer outro arquivo estático
-@app.route("/<path:filename>")
-def serve_static(filename):
-    return send_from_directory(STATIC_DIR, filename)
 
 @app.route("/mensagem-bot", methods=["POST"])
 def responder():
