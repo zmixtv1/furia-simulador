@@ -89,6 +89,18 @@ body {
   text-decoration: underline;
 }
 
+/* Opcional: dê estilo diferenciado ao loading */
+.loading {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* Opcional: estilo para erros */
+.error {
+  color: #e55353;
+}
+
+
 
 
 

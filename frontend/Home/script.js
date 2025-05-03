@@ -69,22 +69,39 @@ formLeft.addEventListener("submit", async e => {
   const txt = inp.value.trim();
   if (!txt) return;
 
+  // 1) Mensagem do usuário
   addLeft("Você", txt);
   inp.value = "";
 
+  // 2) Cria e exibe o <li> de loading
+  const loadingLi = document.createElement("li");
+  loadingLi.classList.add("bot", "loading");
+  loadingLi.innerHTML = `<strong>FURIA Bot:</strong> Carregando…`;
+  ulLeft.appendChild(loadingLi);
+  ulLeft.scrollTop = ulLeft.scrollHeight;
+
   try {
+    // 3) Chama a API
     const res = await fetch(`${API_BASE}/mensagem-bot`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ mensagem: txt })
     });
     const { resposta } = await res.json();
-    addLeft("FURIA Bot", resposta);
+
+    // 4) Substitui o loading pela resposta real
+    loadingLi.innerHTML = `<strong>FURIA Bot:</strong> ${resposta}`;
+    loadingLi.classList.remove("loading");
   } catch (err) {
     console.error(err);
-    addLeft("Erro", "Sem resposta do servidor");
+    loadingLi.innerHTML = `<strong>FURIA Bot:</strong> Erro ao carregar a resposta 😕`;
+    loadingLi.classList.remove("loading");
+    loadingLi.classList.add("error");
+  } finally {
+    ulLeft.scrollTop = ulLeft.scrollHeight;
   }
 });
+
 
 function addLeft(who, text) {
   const li = document.createElement("li");
