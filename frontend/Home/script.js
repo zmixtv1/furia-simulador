@@ -1,4 +1,3 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { firebaseConfig } from "../firebase-config.js";
@@ -10,6 +9,36 @@ const API_BASE = "http://127.0.0.1:5000";
 const app     = initializeApp(firebaseConfig);
 const db      = getDatabase(app);
 const chatRef = ref(db, "chat-publico");
+
+// ───────────────────────────────────────────────────────────────────────────
+// Ao carregar a página, primeiro busca canal live e depois inicializa tudo
+window.addEventListener("DOMContentLoaded", async () => {
+  // 1) Monta o iframe do Twitch com o canal ao vivo
+  const iframe = document.getElementById("twitch-iframe");
+  try {
+    const res = await fetch(`${API_BASE}/live-channel`);
+    const { channel } = await res.json();
+    iframe.src = `https://player.twitch.tv/?channel=${channel}&parent=${location.hostname}`;
+  } catch (err) {
+    console.error("Erro ao obter canal live:", err);
+    // fallback para um canal padrão
+    iframe.src = `https://player.twitch.tv/?channel=furiatv&parent=${location.hostname}`;
+  }
+
+  // 2) Dispara a carga de notícias (se houver perfil)
+  const stored = localStorage.getItem("fanProfile");
+  if (stored) {
+    const profile = JSON.parse(stored);
+    const tags = profile.activities
+      .split(",")
+      .map(a => a.trim().toLowerCase())
+      .filter(Boolean);
+    if (tags.length) {
+      console.log("🔖 Carregando notícias gerais da NewsAPI", tags);
+      carregarNoticiasGerais();
+    }
+  }
+});
 
 // ───────────────────────────────────────────────────────────────────────────
 // Função para carregar notícias filtradas por activities (títulos como links)
@@ -38,25 +67,6 @@ async function carregarNoticiasGerais() {
       .innerHTML = "<p>Falha ao buscar notícias.</p>";
   }
 }
-
-
-// ───────────────────────────────────────────────────────────────────────────
-// Ao carregar a página, busca perfil e dispara a carga de notícias
-window.addEventListener("DOMContentLoaded", () => {
-  const stored = localStorage.getItem("fanProfile");
-  if (!stored) return;
-
-  const profile = JSON.parse(stored);
-  const tags = profile.activities
-    .split(",")
-    .map(a => a.trim().toLowerCase())
-    .filter(Boolean);
-
-  if (tags.length) {
-    console.log("🔖 Carregando notícias gerais da NewsAPI", tags);
-    carregarNoticiasGerais(tags);
-  }
-});
 
 // ───────────────────────────────────────────────────────────────────────────
 // Simulador de Chat (lado esquerdo)
@@ -101,7 +111,6 @@ formLeft.addEventListener("submit", async e => {
     ulLeft.scrollTop = ulLeft.scrollHeight;
   }
 });
-
 
 function addLeft(who, text) {
   const li = document.createElement("li");
@@ -162,5 +171,3 @@ onChildAdded(chatRef, snap => {
   chatUl.appendChild(li);
   chatUl.scrollTop = chatUl.scrollHeight;
 });
-
-

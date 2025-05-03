@@ -3,6 +3,8 @@ from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -142,7 +144,7 @@ def noticias_geral():
     """
     
     # Títulos padrão para busca
-    titulos_padrao = ["FURIA", "CS", "Valorant", "LoL"]
+    titulos_padrao = ["FURIA", "FURIA Esports", "CS:GO", "Valorant", "LOL"]
 
     # Pega o parâmetro q da query string ou usa os títulos padrão
     q_raw = request.args.get("q", "").strip()
@@ -185,6 +187,54 @@ def noticias_geral():
 
     return jsonify({"noticias": resultados})
 
+
+def get_app_token():
+    """
+    Gera um App Access Token usando client credentials.
+    Ele expira em algumas horas; você pode cachear se quiser.
+    """
+    url = "https://id.twitch.tv/oauth2/token"
+    params = {
+        "client_id":     os.getenv("TWITCH_CLIENT_ID"),
+        "client_secret": os.getenv("TWITCH_CLIENT_SECRET"),
+        "grant_type":    "client_credentials"
+    }
+    r = requests.post(url, params=params)
+    r.raise_for_status()
+    return r.json()["access_token"]
+
+def is_live_streamer(username: str, token: str) -> bool:
+    """
+    Retorna True se o canal `username` estiver ao vivo.
+    """
+    url = "https://api.twitch.tv/helix/streams"
+    headers = {
+        "Client-ID":     os.getenv("TWITCH_CLIENT_ID"),
+        "Authorization": f"Bearer {token}"
+    }
+    params = {"user_login": username}
+    r = requests.get(url, headers=headers, params=params)
+    r.raise_for_status()
+    data = r.json().get("data", [])
+    return bool(data)
+
+@app.route("/live-channel", methods=["GET"])
+def live_channel():
+    streamers = ["furiatv","gafallen", "paulanobre", "xarola_", "otsukaxd","ltasul","brino","pOkizGames","IVDMALUCO"]
+    try:
+        token = get_app_token()
+    except Exception as e:
+        return jsonify({"error": "Não foi possível obter token", "detail": str(e)}), 500
+
+    for name in streamers:
+        try:
+            if is_live_streamer(name, token):
+                return jsonify({"channel": name})
+        except:
+            continue
+
+    # Se nenhum estiver ao vivo, retorna um fallback
+    return jsonify({"channel": "furiatv"})
 
 @app.route("/verificar-jogo", methods=["GET"])
 def verificar_jogo():
